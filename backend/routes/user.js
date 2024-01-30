@@ -62,4 +62,49 @@ userRouter.post("/signup", (req, res) => {
   });
 });
 
+const signinBody = zod.object({
+  username: zod.string().email(),
+  password: zod.string(),
+});
+
+// for login
+userRouter.post("/signin", (req, res) => {
+  //input validation
+  const { success } = signinBody.parse(req.body);
+
+  if (!success) {
+    return res.status(411).json({
+      message: "Incorrect inputs",
+    });
+  }
+
+  // check if user exists
+  const existingUser = User.findOne({
+    username: req.body.username,
+    password: req.body.password,
+  });
+
+  if (!existingUser) {
+    return res.status(411).json({
+      message: "Error while logging in",
+    });
+  }
+
+  // getting the id for token
+  const userId = existingUser._id;
+
+  if (existingUser) {
+    const token = jwt.sign(
+      {
+        userId,
+      },
+      JWT_SECRET
+    );
+    return res.status(200).json({
+      message: "User logged in successfully",
+      token,
+    });
+  }
+});
+
 module.exports = userRouter;
