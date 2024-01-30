@@ -93,6 +93,7 @@ userRouter.post("/signin", (req, res) => {
   // getting the id for token
   const userId = existingUser._id;
 
+  // sign the user with the JWT token
   if (existingUser) {
     const token = jwt.sign(
       {
