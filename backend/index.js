@@ -14,7 +14,7 @@ const app = express();
 
 // middlewares
 app.use(express.json());
-app.use(express.json());
+app.use(cors());
 
 // use express router
 app.use("/api/v1", mainRouter);
